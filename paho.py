@@ -14,12 +14,14 @@ def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
 
 def on_publish(client, userdata, msg):
-    print(msg.topic+" "+str(msg.payload))
+    print(client,msg,userdata)
+    # print(msg.topic+" "+str(msg.payload))
 
-client = mqtt.Client("telemetry")
+client = mqtt.Client("telemetry1")
 client.on_connect = on_connect
 client.on_message = on_message
-client.username_pw_set("osho","osho")
+client.on_publish=on_publish
+client.username_pw_set("admin","admin")
 client.connect("ec2-13-232-244-246.ap-south-1.compute.amazonaws.com", 1883)
 f = open('test.json',)
   
@@ -34,9 +36,9 @@ data = json.load(f)
 
 while True:
     rand=random.randint(0,9)
-    print("publishing ",rand)
+    # print("publishing ",rand)
     client.publish("telemetry",json.dumps({"origin":"local","data":json.dumps(data)}))
-    time.sleep(1)
+    time.sleep(.1)
 # Blocking call that processes network traffic, dispatches callbacks and
 # handles reconnecting.
 # Other loop*() functions are available that give a threaded interface and a
